@@ -7,7 +7,7 @@ import Vapor
 public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
      app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-    
+//    this should be the only middleware invocation I have to make here.
     app.middleware.use(app.sessions.middleware)
 
     app.databases.use(.postgres(

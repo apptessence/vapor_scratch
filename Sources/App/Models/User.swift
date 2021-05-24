@@ -45,7 +45,6 @@ extension User {
   }
 }
 
-
 extension EventLoopFuture where Value: User {
   func convertToPublic() -> EventLoopFuture<User.Public> {
     return self.map { user in
@@ -53,7 +52,6 @@ extension EventLoopFuture where Value: User {
     }
   }
 }
-
 
 extension Collection where Element: User {
   func convertToPublic() -> [User.Public] {
@@ -67,19 +65,14 @@ extension EventLoopFuture where Value == Array<User> {
   }
 }
 
-// 1
 extension User: ModelSessionAuthenticatable {}
-// 2
 extension User: ModelCredentialsAuthenticatable {}
 
 // This i what causes the User model to conform to modelCredentialsAuthenticatable
 extension User: ModelAuthenticatable {
-  // 2
   static let usernameKey = \User.$username
-  // 3
   static let passwordHashKey = \User.$password
 
-  // 4
   func verify(password: String) throws -> Bool {
     try Bcrypt.verify(password, created: self.password)
   }
