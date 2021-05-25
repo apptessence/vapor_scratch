@@ -12,6 +12,10 @@ struct UsersController: RouteCollection {
         let basicAuthMiddleware = User.authenticator()
         let basicAuthGroup = usersRoute.grouped(basicAuthMiddleware)
         
+        let authSessionsRoutes = routes.grouped(User.sessionAuthenticator())
+        let credentialsAuthRoutes = authSessionsRoutes.grouped(User.credentialsAuthenticator())
+        credentialsAuthRoutes.post("login", use: postLoginHandler)
+        
         basicAuthGroup.post("login", use: postLoginHandler)
         let tokenAuthMiddleware = Token.authenticator()
         let guardAuthMiddleware = User.guardMiddleware()
