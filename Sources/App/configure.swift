@@ -19,7 +19,7 @@ public func configure(_ app: Application) throws {
     ), as: .psql)
 
     app.migrations.add(CreateUser())
-    
+    app.logger.logLevel = .debug
     app.views.use(.leaf)
 
     try app.autoMigrate().wait()

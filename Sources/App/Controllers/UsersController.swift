@@ -14,9 +14,9 @@ struct UsersController: RouteCollection {
         
         let authSessionsRoutes = routes.grouped(User.sessionAuthenticator())
         let credentialsAuthRoutes = authSessionsRoutes.grouped(User.credentialsAuthenticator())
-        credentialsAuthRoutes.post("login", use: postLoginHandler)
+        credentialsAuthRoutes.post("users", "login", use: postLoginHandler)
         
-        basicAuthGroup.post("login", use: postLoginHandler)
+//        basicAuthGroup.post("login", use: postLoginHandler)
         let tokenAuthMiddleware = Token.authenticator()
         let guardAuthMiddleware = User.guardMiddleware()
         let tokenAuthGroup = usersRoute.grouped(tokenAuthMiddleware, guardAuthMiddleware)
@@ -36,10 +36,12 @@ struct UsersController: RouteCollection {
         return req.view.render("login", context)
     }
     
-    func postLoginHandler(_ req: Request) throws -> EventLoopFuture<Token> {
+    func postLoginHandler(_ req: Request) throws -> EventLoopFuture<View> {
+        
       let user = try req.auth.require(User.self)
-      let token = try Token.generate(for: user)
-      return token.save(on: req.db).map { token }
+//      let token = try Token.generate(for: user)
+//      token.save(on: req.db).map { token }
+        return req.view.render("bleep")
     }
 
     func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
@@ -59,6 +61,10 @@ struct UsersController: RouteCollection {
             .unwrap(or: Abort(.notFound))
             .convertToPublic()
     }
+}
+
+struct loginUser: Encodable {
+    let password: String
 }
 
 struct LoginContext: Encodable {
